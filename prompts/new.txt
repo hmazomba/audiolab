@@ -1,0 +1,687 @@
+# PromptLoop
+We need to make a Gemini powered (uses their Lyra audio generation model) to make a Digital Audio Workstation/Loop Machine. This station will help will loop or sound generation for artists who want to make their own sounds and loops to either make a mix (live recording) or make a song. Let's start it with 4x4 or 16 different pads for the loop machine. There should be a song section where you can either upload or create different loops to create a song. 
+
+
+UI Screens
+	```**Wireframe Concept: Lyra Studio - A Gemini-Powered DAW/Loop Machine**
+
+Lyra Studio is designed with a sleek, dark theme, prioritizing intuitive navigation and clear visual feedback for musicians and producers. The interface is divided into key functional areas to streamline creative workflows.
+
+---
+
+### **1. Top Bar (Global Controls & Project Management)**
+
+*   **App Logo & Name:** `[Lyra Studio]` (Prominently displayed on the far left)
+*   **Project Controls:**
+    *   `[New Project]` button: Clears the workspace.
+    *   `[Save]` button: Saves the current project state.
+    *   `[Load Project]` button: Opens an existing project.
+    *   `[Export Song]` button: Renders the song to audio formats (e.g., WAV, MP3).
+*   **Global Tempo Display:** `BPM: [120]` (Editable numeric input with `[+/-]` fine-tune buttons).
+    *   `[Tap Tempo]` button: Allows users to tap a rhythm to set the BPM.
+*   **Master Volume Slider:** `[Master Vol |-----------| ]` (A horizontal fader for overall output level, with a peak meter)
+*   **Undo/Redo:** `[⟲]` `[⟳]` buttons (Standard undo/redo functionality)
+
+---
+
+### **2. Main Workspace (Core Creative Area)**
+
+The main workspace is vertically split, dedicating the top half to the Loop Pad Machine and the bottom half to the Song Arrangement Timeline.
+
+#### **A. Top Section: Loop Pad Machine (4x4 Grid)**
+
+This is the primary interface for triggering and manipulating individual sonic loops and one-shots.
+
+*   **16 Pads Layout (4 Rows x 4 Columns):** Each pad is a touch-sensitive or mouse-clickable square button.
+    *   **Visual Representation per Pad:**
+        *   **Empty Pad:** Faint outline, displays "Drag & Drop Loop" or "Generate New" prompt.
+        *   **Loaded Pad:** Displays a small **waveform preview** of the loop, the **Loop Name** (e.g., "Kick Beat 1", "Synth Pad Dm"), and a `[Play/Stop]` indicator (triangle/square).
+        *   **Playing Pad:** Pad illuminates with a vibrant accent color (e.g., electric blue), waveform animates or glows.
+        *   **Stopped Pad:** Pad returns to a muted color (e.g., grey), static waveform.
+    *   **Interaction:**
+        *   **Click:** Triggers/stops the loop assigned to the pad.
+        *   **Double-click/Long press:** Opens detailed `[Pad Settings]` panel (see below).
+        *   **Drag-and-Drop:** Users can drag loops from the "Loop Library" onto empty pads, or drag loops from pads onto the "Song Arrangement Timeline."
+
+*   **Global Pad Controls (Above/Below the Pad Grid):**
+    *   `[Quantize: 1/16]` dropdown: Snaps loop triggers to a grid (e.g., 1/4, 1/8, 1/16 notes).
+    *   `[Global Play/Stop]` button: Starts/stops all currently playing loops on the pads.
+    *   `[Record Loop]` button: Activates recording mode, allowing users to record audio input directly into an empty pad slot.
+    *   `[Clear All Pads]` button: Empties all 16 pads.
+    *   `[Gemini Generate]` button: Opens the dedicated "AI Generation" panel in the left sidebar, pre-focused on generating new loops.
+
+*   **[Pad Settings] Panel (Appears when a pad is double-clicked):**
+    *   An overlay or side panel for fine-tuning the selected pad's loop.
+    *   **Pad Name:** `[Text Input: Kick Drums]` (Editable name for the loop).
+    *   **Volume Slider:** `[Volume |-----------| ]` (Individual gain control for the loop).
+    *   **Pan Slider:** `[Pan |-----o-----| ]` (Left-to-right stereo positioning).
+    *   **Loop Region Visualizer:** A larger waveform display with draggable `[Start]` and `[End]` handles to define the precise looping segment.
+    *   `[Load Loop]` button: Opens a file browser to import audio.
+    *   `[Save Loop]` button: Saves the modified loop to the user's library.
+    *   `[Delete Loop]` button: Removes the loop from the pad and optionally from the project.
+    *   `[Send to Gemini for Variation]` button: Sends the current loop's audio to the Gemini AI for generating similar but distinct variations.
+
+#### **B. Bottom Section: Song Arrangement Timeline**
+
+This acts as a traditional DAW sequencer, allowing users to arrange and sequence loops to create full songs.
+
+*   **Timeline Header:**
+    *   `[1 | 2 | 3 | 4 | ...]`: Measure/Bar numbers displayed horizontally.
+    *   `[Playhead Scrub Bar]`: A visual indicator showing the current playback position, draggable for navigation.
+*   **Track Lanes (Vertical):** Each horizontal lane represents an individual track (or instrument channel).
+    *   **Track Header (Left side of each track):**
+        *   `[Track Name]` (e.g., "Drums", "Bass", "Synth Lead", "Vocals", editable text).
+        *   `[M]` (Mute button): Mutes the entire track.
+        *   `[S]` (Solo button): Solos this track, muting all others.
+        *   `[Vol Slider]` (Individual track volume fader).
+        *   `[Pan Knob]` (Individual track pan control).
+    *   **Clip Area (Right side of each track):**
+        *   A grid representing time, where loops are placed.
+        *   **Loop Clips:** Loops appear as rectangular blocks with a `[waveform representation]` inside.
+            *   **Placement:** Drag-and-drop loops from the "Loop Library" or directly from the 4x4 pads onto any track.
+            *   **Manipulation:** Loops can be resized horizontally (to repeat or trim), moved, and copied.
+            *   **Selection:** Click to select a clip. Double-click to open a detailed clip editor (similar to Pad Settings, but specifically for this instance of the loop in the song).
+*   **Global Song Playback Controls (Below Timeline):**
+    *   `[Rewind]` `[Play]` `[Pause]` `[Fast Forward]` `[Stop]` buttons: Standard transport controls for the song timeline.
+    *   `[Loop Region Toggle]` (On/Off): Toggles playback looping within a defined section of the timeline.
+    *   `[Metronome Toggle]` (On/Off): Turns the click track on/off during recording or playback.
+    *   `[Record Song]` button: Initiates song recording, useful for live automation or recording new audio directly into a track.
+
+---
+
+### **3. Left Side Panel (Collapsible/Tabbed: Loop Library & AI Generation)**
+
+This panel can be toggled open/closed to maximize main workspace.
+
+#### **A. Loop Library Tab**
+
+*   **Search Bar:** `[Search loops...]` (Text input to filter loops by name).
+*   **Categories/Filters:** `[Drums]` `[Bass]` `[Synth]` `[Vocals]` `[SFX]` (Buttons or dropdowns to categorize/filter the loop list).
+*   **Loop List:** A scrollable list of all available loops.
+    *   Each item displays: `[Loop Name]`, `[Duration]`, `[BPM]` (if applicable).
+    *   `[Preview]` button: Plays the loop for auditioning.
+    *   `[Drag Handle]` icon: To drag and drop loops onto pads or the song timeline.
+    *   `[Upload Loop]` button: Opens a file browser to import custom audio samples.
+    *   `[Delete]` icon: Removes a loop from the library.
+*   **"My Generated Loops" Section:** A sub-category or dedicated folder within the library specifically for loops created by the Gemini AI.
+
+#### **B. AI Generation Tab (Powered by Gemini Lyra)**
+
+This is where users interact with the generative AI to create new sounds and variations.
+
+*   **"Generate New Loop" Section:**
+    *   **Text Prompt Input:** `[Describe the sound you want: "jazzy synth chords", "heavy metal drum fill"]` (Multi-line text area for descriptive input).
+    *   **Parameters (Optional, but recommended for better results):**
+        *   `[Genre]` dropdown: (e.g., Hip-Hop, EDM, Rock, Jazz, Ambient, Classical).
+        *   `[Instrument]` dropdown: (e.g., Drums, Bass, Synth, Guitar, Piano, Orchestra, Vocals).
+        *   `[Mood]` dropdown: (e.g., Happy, Sad, Energetic, Calm, Dark, Uplifting).
+        *   `[Key]` dropdown: (e.g., C Major, A Minor).
+        *   `[BPM]` input: `[Match Project BPM]` checkbox, or enter specific BPM.
+        *   `[Length]` dropdown: (e.g., 2 bars, 4 bars, 8 bars, 16 bars).
+    *   `[Generate]` button: Initiates the AI generation process.
+    *   **Results Area:**
+        *   Displays a list of generated loop suggestions (e.g., 3-5 options).
+        *   Each suggestion includes: `[Small Preview Waveform/Loop Name]`.
+        *   `[Play]` button: To audition the generated loop.
+        *   `[Assign to Pad]` dropdown: Allows users to instantly load the generated loop onto a specific 4x4 pad.
+        *   `[Add to Library]` button: Adds the generated loop to the general "Loop Library" for later use.
+
+*   **"Vary Existing Loop" Section:**
+    *   `[Select Loop to Vary]` dropdown: Choose from currently loaded pads or loops in the library.
+    *   **Variation Type:** Radio buttons or switches for common modifications: `[More Complex]` `[Simpler]` `[Different Instrument]` `[Different Rhythm]` `[Different Melody]`.
+    *   `[Generate Variation]` button: Creates AI-powered variations of the selected loop.
+    *   **Results Area:** (Similar display and options as "Generate New Loop" results).
+
+---
+
+### **4. Right Side Panel (Collapsible/Optional: Mixer / Effects)**
+
+(This could be introduced in a future version for advanced users, or simplified for initial launch.)
+
+*   **`[Mixer View]` tab:** A concise channel strip mixer showing volume and pan faders for each active track/pad.
+*   **`[Effects Rack]` tab:** Simple effect slots for each track, allowing selection from a basic set of effects (e.g., Reverb, Delay, Distortion, EQ).
+
+---
+
+This wireframe provides a foundation for the Lyra Studio UI, integrating the core loop machine and song creation elements with the powerful Gemini AI audio generation capabilities. Its design focuses on clarity, accessibility for all skill levels, and an intuitive workflow for music creators.```
+Backend
+	```As an AI in API Development, I approach this task with a rigorous, detail-oriented, and user-centric mindset, prioritizing clear logic and technical soundness. The goal is to design a powerful yet flexible backend API for Lyra Studio, ensuring seamless integration with Lyra RealTime while maintaining performance, security, and maintainability.
+
+---
+
+## Backend API Design for Lyra Studio (Gemini-Powered DAW/Loop Machine)
+
+### 1. Core Principles & Architecture
+
+The backend will serve two primary functions:
+1.  **RESTful API:** For managing static data like user accounts, projects, saved loops, and song arrangements. This provides persistence and a structured way to interact with user-specific content.
+2.  **WebSocket API:** For real-time, bidirectional communication with the Lyra RealTime audio generation model and for coordinating live playback states (if real-time collaborative features are pursued later). The backend will act as a secure proxy between the UI and the Lyra API.
+
+**Technology Stack Considerations:**
+*   **Backend Language/Framework:** Python (e.g., FastAPI + websockets or Django Channels) or Node.js (e.g., Express + `ws` or Socket.IO). Python is a strong choice due to the official `google-generativeai` SDK examples for Lyra.
+*   **Database:** PostgreSQL (robust, relational, good for structured project data) or MongoDB (flexible, good for less structured data like complex project states).
+*   **Audio Storage:** Google Cloud Storage (GCS) or Amazon S3 for storing generated and uploaded audio files.
+*   **Audio Processing:** Libraries like `pydub`, `ffmpeg` (Python) or `fluent-ffmpeg` (Node.js) for:
+    *   Converting Lyra's raw PCM audio to standard formats (WAV, MP3).
+    *   Extracting waveform data for previews.
+    *   Performing basic audio analysis (e.g., BPM detection for uploaded loops).
+    *   Mixing/rendering full songs for export.
+*   **AI Integration:** `google-generativeai` Python SDK (or equivalent for other languages) for Lyra RealTime.
+
+### 2. Data Models (Conceptual Schema)
+
+These models define the structure of data managed by the RESTful API.
+
+#### **A. User Account (Basic Authentication/Authorization)**
+*   `userId` (UUID)
+*   `username` (String)
+*   `email` (String)
+*   `passwordHash` (String)
+*   `apiKey` (String, for internal service-to-service auth, if needed)
+
+#### **B. Project (`Project` object)**
+Represents a user's entire DAW session.
+*   `projectId` (UUID, Primary Key)
+*   `userId` (UUID, Foreign Key to User)
+*   `projectName` (String)
+*   `bpm` (Integer, Global BPM for the project)
+*   `masterVolume` (Float, 0.0-1.0)
+*   `quantizeGrid` (String, e.g., "1/16", "1/8")
+*   `pads` (JSONB/Array of simplified Pad objects, representing current state on the 4x4 grid)
+*   `tracks` (JSONB/Array of simplified Track objects, representing current song arrangement)
+*   `createdAt` (Timestamp)
+*   `updatedAt` (Timestamp)
+
+#### **C. Loop (`Loop` object)**
+Represents a distinct audio asset, either user-uploaded or AI-generated.
+*   `loopId` (UUID, Primary Key)
+*   `userId` (UUID, Foreign Key to User)
+*   `name` (String, e.g., "Kick Beat 1")
+*   `audioUrl` (String, URL to the stored audio file in GCS/S3)
+*   `waveformImageUrl` (String, URL to a pre-rendered waveform image or data)
+*   `durationSeconds` (Float)
+*   `estimatedBpm` (Integer, detected for uploaded, or generated for AI)
+*   `isGenerated` (Boolean, `true` if from Lyra, `false` if uploaded)
+*   `originalPrompt` (String, if `isGenerated`, the prompt text used)
+*   `lyraConfig` (JSONB, if `isGenerated`, the `MusicGenerationConfig` used)
+*   `isPublic` (Boolean, if a community library feature is added)
+
+#### **D. Pad (`Pad` object - stored within `Project` for simplicity, or as separate entities for complex scenarios)**
+A slot on the 4x4 grid, referencing a `Loop`.
+*   `padIndex` (Integer, 0-15)
+*   `loopId` (UUID, Foreign Key to Loop, `null` if empty)
+*   `padName` (String, overrides `Loop.name` if custom)
+*   `volume` (Float, 0.0-1.0)
+*   `pan` (Float, -1.0 to 1.0)
+*   `loopStartOffsetSeconds` (Float, start handle for loop region)
+*   `loopEndOffsetSeconds` (Float, end handle for loop region)
+
+#### **E. Track (`Track` object - stored within `Project`)**
+A channel in the song arrangement.
+*   `trackId` (UUID, unique per project)
+*   `trackName` (String)
+*   `volume` (Float)
+*   `pan` (Float)
+*   `isMuted` (Boolean)
+*   `isSoloed` (Boolean)
+*   `clips` (Array of `Clip` objects)
+
+#### **F. Clip (`Clip` object - stored within `Track`)**
+An instance of a `Loop` placed on the song arrangement timeline.
+*   `clipId` (UUID, unique per track)
+*   `loopId` (UUID, Foreign Key to Loop)
+*   `startBar` (Integer)
+*   `durationBars` (Integer/Float, calculated from original loop and stretch)
+*   `startOffsetInLoopSeconds` (Float, where the clip starts playing within the original loop's audio)
+*   `endOffsetInLoopSeconds` (Float, where the clip ends playing within the original loop's audio)
+*   `volumeOverride` (Optional Float, if different from track volume)
+*   `panOverride` (Optional Float, if different from track pan)
+
+### 3. REST API Endpoints
+
+These endpoints support project management, static loop library management, and export functionality.
+
+#### **A. Authentication & User Management**
+*   `POST /api/auth/register`: Register a new user.
+*   `POST /api/auth/login`: Authenticate and receive a JWT or session token.
+*   `GET /api/users/me`: Get current user profile (after authentication).
+
+#### **B. Project Management (`/api/projects`)**
+*   **`POST /api/projects`**
+    *   **Description:** Creates a new project.
+    *   **Request Body:** `{"projectName": "Summer Anthem", "bpm": 120}`
+    *   **Response:** `201 Created`, returns `Project` object.
+*   **`GET /api/projects/{projectId}`**
+    *   **Description:** Retrieves a specific project including its pads and tracks.
+    *   **Response:** `200 OK`, returns `Project` object.
+*   **`PUT /api/projects/{projectId}`**
+    *   **Description:** Updates the entire state of a project (BPM, master volume, pads, tracks). This is a full replacement operation.
+    *   **Request Body:** Full `Project` object (or delta updates if PATCH is implemented).
+    *   **Response:** `200 OK`, returns updated `Project` object.
+*   **`DELETE /api/projects/{projectId}`**
+    *   **Description:** Deletes a project.
+    *   **Response:** `204 No Content`.
+*   **`GET /api/projects`**
+    *   **Description:** Lists all projects for the authenticated user.
+    *   **Response:** `200 OK`, returns `[{projectId: "...", projectName: "..."}, ...]`
+
+#### **C. Loop Library Management (`/api/loops`)**
+*   **`POST /api/loops/upload`**
+    *   **Description:** Uploads an audio file to be used as a loop.
+    *   **Request Body:** `multipart/form-data` with `file` (audio), `name` (string).
+    *   **Backend Logic:**
+        1.  Receives audio file.
+        2.  Stores file in GCS/S3.
+        3.  Asynchronously processes audio: detects BPM, generates waveform image/data, calculates duration.
+        4.  Creates and saves `Loop` entry in DB.
+    *   **Response:** `202 Accepted` (if processing is async) or `201 Created` with `Loop` object (if synchronous and fast).
+*   **`GET /api/loops/{loopId}`**
+    *   **Description:** Retrieves details of a specific loop.
+    *   **Response:** `200 OK`, returns `Loop` object.
+*   **`DELETE /api/loops/{loopId}`**
+    *   **Description:** Deletes a loop. Checks if it's referenced by any active project; if so, may require user confirmation or disallow.
+    *   **Response:** `204 No Content`.
+*   **`GET /api/loops`**
+    *   **Description:** Lists loops available to the user (their uploads, AI-generated, and potentially publicly shared ones).
+    *   **Query Params:** `?search=kick&category=drums&isGenerated=true&limit=20&offset=0`
+    *   **Response:** `200 OK`, returns `[{loopId: "...", name: "...", audioUrl: "..."}, ...]`
+*   **`POST /api/loops/variation/{loopId}`**
+    *   **Description:** Initiates an AI-powered variation of an existing loop.
+    *   **Request Body:** `{ "variationPrompt": "more complex rhythm", "variationType": "Different Rhythm", "lengthBars": 4 }`
+    *   **Backend Logic:** This is where it gets tricky for Lyra RealTime. Lyra generates indefinitely. "Varying" an existing loop means taking its characteristics and applying new prompts.
+        1.  Retrieve `originalLoopId`'s details (name, original prompt, Lyra config).
+        2.  Formulate a new Lyra `WeightedPrompt` and `LiveMusicGenerationConfig`
+            *   Combine original loop's characteristics (e.g., detected genre, instrument, mood from its prompt/metadata) with `variationPrompt`.
+            *   Use original `bpm`, `scale` if possible, otherwise let Lyra decide or use project BPM.
+        3.  Initiate a Lyra RealTime generation session (internally).
+        4.  Stream audio chunks from Lyra until `lengthBars` is reached.
+        5.  Stop Lyra generation.
+        6.  Process, save, and return the new `Loop` object ID.
+    *   **Response:** `202 Accepted` with a `jobId` for polling status, or a WebSocket message will notify completion.
+
+#### **D. Song Export (`/api/projects/{projectId}/export`)**
+*   **`POST /api/projects/{projectId}/export`**
+    *   **Description:** Renders the entire song arrangement to an audio file.
+    *   **Request Body:** `{"format": "wav", "quality": "high"}`
+    *   **Backend Logic:**
+        1.  Retrieves `Project` data, including `Tracks` and `Clips`.
+        2.  Fetches all associated `Loop` audio files from storage.
+        3.  Uses `ffmpeg` or similar library to perform audio mixing:
+            *   Reads each loop's audio data.
+            *   Applies individual clip/track volume, pan, and offset/duration.
+            *   Mixes all tracks together according to the timeline.
+        4.  Saves the final mixed audio file (e.g., `song.wav`) to GCS/S3.
+    *   **Response:** `202 Accepted` with a `jobId` and a link to check status. Once complete, a `200 OK` with a direct download link will be available.
+
+### 4. WebSocket API (`wss://your-backend.com/ws/lyra-session`)
+
+This is the real-time core for interacting with Lyra RealTime and managing live state.
+
+**Message Types (Client -> Server):**
+
+*   **`CONNECT`**: (Implicit on WebSocket handshake) Authenticates the user and establishes a Lyra RealTime session on the backend.
+    *   `payload.auth_token`: User's JWT token.
+*   **`GENERATE_AI_LOOP_REQUEST`**: Requests generation of a new loop from Lyra.
+    *   `payload`:
+        ```json
+        {
+          "requestId": "unique-client-id-for-this-request",
+          "prompt": { "text": "minimal techno", "weight": 1.0 },
+          "config": {
+            "bpm": 90,
+            "genre": "Minimal Techno",
+            "instrument": "Drums, Synth",
+            "lengthBars": 4, // Custom backend parameter
+            "temperature": 1.0,
+            "density": 0.7
+          }
+        }
+        ```
+    *   **Backend Logic:**
+        1.  Maps user-friendly `config` (genre, instrument, mood, lengthBars) to Lyra's `MusicGenerationConfig` parameters (`bpm`, `guidance`, `density`, `brightness`, `scale`, `temperature`, `top_k`, `seed`).
+        2.  Calls `session.set_weighted_prompts()` and `session.set_music_generation_config()`.
+        3.  Calls `session.play()`.
+        4.  Starts `receive_audio` background task.
+        5.  Buffers Lyra's raw PCM audio chunks. Once `lengthBars` is reached, backend calls `session.stop()` or `session.reset_context()` on Lyra.
+        6.  Converts buffered audio to WAV/MP3, saves to GCS/S3, and creates a `Loop` record.
+        7.  Sends `AI_LOOP_GENERATED` message back to the client.
+
+*   **`STEER_ONGOING_GENERATION`**: To dynamically change Lyra's output in real-time (e.g., for "Prompt DJ" mode, if a Lyra RealTime-driven pad is implemented).
+    *   `payload`:
+        ```json
+        {
+          "prompts": [
+            {"text": "Piano", "weight": 2.0},
+            {"text": "Meditation", "weight": 0.5}
+          ],
+          "configDelta": { // Only send parameters you want to change, backend merges
+            "brightness": 0.8,
+            "bpm": 128, // If BPM/Scale changes, backend *must* call reset_context
+            "scale": "C_MAJOR_A_MINOR"
+          }
+        }
+        ```
+    *   **Backend Logic:**
+        1.  Calls `session.set_weighted_prompts()` for `prompts`.
+        2.  Merges `configDelta` with current Lyra session config and calls `session.set_music_generation_config()`.
+        3.  If `bpm` or `scale` changed, calls `session.reset_context()`.
+        4.  Lyra will smoothly transition (or hard transition for BPM/Scale). Backend continues streaming audio via `AUDIO_CHUNK`.
+
+*   **`PAD_STATE_UPDATE`**: (Primarily for UI state, not Lyra directly) Updates parameters for a pad.
+    *   `payload`: `{ "padIndex": 0, "volume": 0.7, "pan": 0.2, "loopStartOffsetSeconds": 0.5 }`
+    *   **Backend Logic:** Updates the `Pad` object within the `Project` in the database. Client-side audio engine handles the *actual* audio manipulation.
+
+*   **`SONG_PLAYBACK_CONTROL`**: To control the global transport or coordinate playback (if multi-user).
+    *   `payload`: `{ "action": "play" | "pause" | "stop" | "rewind" | "forward" | "loop_on" | "loop_off" | "metronome_on" | "metronome_off" }`
+    *   **Backend Logic:** Updates `Project` state in DB. Can broadcast to other clients if collaborative features exist.
+
+**Message Types (Server -> Client):**
+
+*   **`AUDIO_CHUNK`**: Streams generated audio from Lyra RealTime.
+    *   `payload`: `base64EncodedAudioData` (byte stream for immediate playback on client).
+    *   **Backend Logic:** Receives `audio_chunks` from `session.receive()`, potentially converts from raw PCM, and sends to client.
+*   **`AI_LOOP_GENERATED`**: Notifies the client that a new loop has been successfully generated and saved.
+    *   `payload`: `{ "requestId": "matching-request-id", "loop": { "loopId": "...", "name": "...", "audioUrl": "...", "waveformImageUrl": "...", ... } }`
+    *   **Backend Logic:** Sent after a `GENERATE_AI_LOOP_REQUEST` is fulfilled.
+*   **`PROJECT_UPDATED`**: Notifies clients about changes to the project state (e.g., another user saved a change, or a background process updated something).
+    *   `payload`: `{ "projectId": "...", "changes": { "bpm": 125, "pads": [ { "padIndex": 0, "loopId": "new-loop-id" } ] } }`
+*   **`PROCESS_COMPLETE`**: Notification for long-running tasks like song export or complex loop variations.
+    *   `payload`: `{ "jobId": "...", "status": "completed", "resultUrl": "url-to-exported-song" }`
+*   **`ERROR`**: Reports API or Lyra-related errors.
+    *   `payload`: `{ "requestId": "...", "code": "AI_GENERATION_FAILED", "message": "Could not generate loop based on prompt: 'bad words'" }`
+
+### 5. Integration with Lyra RealTime specifics
+
+*   **Persistent Connection:** The backend maintains a `client.aio.live.music.connect()` WebSocket session for *each active user* that is engaged in Lyra generation. This is resource-intensive, so idle sessions should be cleaned up.
+*   **Prompting:** The backend translates the UI's user-friendly prompts (Genre, Instrument, Mood, Text description) into `WeightedPrompt` objects. It also maps UI parameters like `BPM`, `Scale`, `Density`, `Brightness` to `LiveMusicGenerationConfig`.
+*   **Buffering & Length Control:** As Lyra streams indefinitely, the backend determines when a "loop" is complete based on `lengthBars` from the client request. It buffers the incoming raw PCM audio, stops Lyra (`session.stop()` or `session.reset_context()`), and then processes the buffered audio into a finite loop file.
+*   **Real-time Steering:** For live generation, future features could allow persistent Lyra generation on a "live pad" by continuously sending `set_weighted_prompts` and `set_music_generation_config` as the user manipulates controls (e.g., a "Prompt DJ"). The backend would stream these changes to Lyra and forward the continuous `AUDIO_CHUNK` output.
+*   **Context Reset:** The backend must explicitly call `session.reset_context()` on Lyra when fundamental parameters like `bpm` or `scale` are changed, as indicated by Lyra's documentation, to ensure new values are applied.
+
+### 6. Security & Best Practices
+
+*   **API Key Management:** Gemini API keys must *never* be exposed to the client-side. All Lyra interactions happen server-side.
+*   **Authentication & Authorization:** Implement robust token-based authentication (e.g., JWT) for all REST and WebSocket connections. Ensure users can only access/modify their own projects/loops.
+*   **Input Validation & Sanitization:** Strictly validate and sanitize all incoming data (prompts, numerical parameters, file uploads) to prevent XSS, injection attacks, and ensure compatibility with Lyra API.
+*   **Audio Storage Security:** Store audio files in private cloud storage buckets. Generate time-limited, signed URLs for clients to access audio files for playback, enhancing security.
+*   **Rate Limiting:** Protect against abuse by implementing rate limiting on both REST and WebSocket endpoints.
+*   **Error Handling:** Implement robust error handling (try-catch, graceful degradation). Provide clear, user-friendly error messages. Log detailed errors for debugging.
+*   **Asynchronous Processing:** Leverage asynchronous programming models (e.g., Python `asyncio`) for handling Lyra's streaming input/output and long-running tasks (audio processing, export) to prevent blocking the main server thread.
+*   **Scalability:** Design for horizontal scaling. Use stateless REST endpoints where possible. For WebSockets, consider sticky sessions if stateful connections are required (e.g., for a single Lyra session per client).
+*   **Observability:** Implement comprehensive logging, monitoring (metrics for requests, errors, Lyra API calls, audio processing times), and tracing to understand system behavior and troubleshoot issues.
+
+This backend API design provides a flexible and scalable foundation for Lyra Studio, enabling both persistent project management and real-time, AI-driven music generation experiences.```
+Frontend
+	```This project, "Lyra Studio," envisions a powerful yet intuitive digital audio workstation (DAW) and loop machine powered by Gemini's Lyra audio generation model. As a Senior Front-End Engineering Architect, my goal is to outline the essential frontend components, technologies, and architectural considerations required to bring this concept to life, ensuring a seamless and inspiring user experience for musicians and producers.
+
+The frontend needs to manage complex real-time audio processing, interactive UI elements, high user interaction rates, and integration with a sophisticated AI model.
+
+Here’s a conceptualization of the frontend requirements:
+
+### I. Core Architecture & Technology Stack
+
+1.  **Frontend Framework**:
+    *   **Recommendation**: React, Vue, or Svelte. These frameworks provide component-based architecture, efficient DOM updates, and a strong ecosystem, essential for managing the complexity of a DAW.
+    *   **Reasoning**: Enables modularity, maintainability, and reusability of UI components, which are critical for an application with many interactive elements.
+
+2.  **State Management**:
+    *   **Recommendation**: A robust global state management library like Zustand, Jotai (for React), or Pinia (for Vue), alongside local component state.
+    *   **Reasoning**: Managing the application's state (BPM, active loops, project data, arrangement, AI generation parameters, playback status) across numerous components requires a centralized and scalable solution. Local state will handle ephemeral UI states.
+
+3.  **Audio Engine**:
+    *   **Recommendation**: Web Audio API as the foundational layer. Libraries like `Tone.js` or `Wavesurfer.js` can significantly simplify development by providing higher-level abstractions for synthesis, sampling, sequencing, effects, and waveform visualization.
+    *   **Reasoning**: The Web Audio API is the standard for sophisticated audio processing in the browser, crucial for real-time playback, mixing, recording, and interacting with the Lyra API's audio streams.
+
+4.  **Real-time Communication**:
+    *   **Recommendation**: WebSockets.
+    *   **Reasoning**: The Lyra RealTime API operates via a persistent, bidirectional streaming connection, making WebSockets the essential technology for sending control messages (prompts, configuration) and receiving audio data chunks in real-time.
+
+5.  **Drag and Drop Functionality**:
+    *   **Recommendation**: Native HTML5 Drag and Drop API or a specialized library (e.g., `dnd-kit`, `react-dnd`).
+    *   **Reasoning**: Core interaction for moving loops between the library, pads, and timeline.
+
+6.  **Styling**:
+    *   **Recommendation**: CSS-in-JS solutions (like Styled Components) or a CSS preprocessor (Sass/SCSS), coupled with a utility-first CSS framework (like Tailwind CSS) for rapid UI development, or custom CSS for highly bespoke components.
+    *   **Reasoning**: To achieve the sleek, dark theme and highly customized interactive elements, flexible and powerful styling solutions are needed.
+
+7.  **Language**:
+    *   **Recommendation**: TypeScript.
+    *   **Reasoning**: Given the complexity and real-time nature of the application, TypeScript will provide type safety, improve developer experience, and help catch errors early in the development cycle.
+
+### II. Key UI Components & Functionality Breakdown
+
+Here's a breakdown of the necessary components based on the provided wireframes:
+
+**A. Top Bar (Global Controls & Project Management)**
+
+1.  **App Logo/Name**: Static display component on the left.
+2.  **Project Controls**:
+    *   **Buttons**: "New Project", "Save", "Load", "Export Song".
+    *   **Functionality**: Triggering project state management (serialization/deserialization), potentially using browser `localStorage` for simple projects or API calls for cloud storage. "Export" will require logic to gather all audio data and encode it into a playable format.
+3.  **Global Tempo Display & Controls**:
+    *   **BPM Display**: Read-only numerical display.
+    *   **+/- Buttons**: For fine-tuning BPM.
+    *   **Tap Tempo Button**: Requires capturing user input (clicks or key presses) within a short time window to calculate and set the BPM.
+    *   **Lyra Integration**: The BPM value will be a critical parameter sent to the Lyra API for generation.
+4.  **Master Volume Slider & Peak Meter**:
+    *   **Slider**: A fader component controlling the overall audio output level.
+    *   **Peak Meter**: Real-time visualization of audio output volume, requiring analysis of the master audio bus in the Web Audio API.
+5.  **Undo/Redo Buttons**:
+    *   **Functionality**: Implement a robust command pattern or state history management to allow users to step backward and forward through changes.
+
+**B. Main Workspace**
+
+1.  **Loop Pad Machine (4x4 Grid)**
+    *   **16 Pad Components**: Each pad is a complex interactive element.
+        *   **States**: Empty, Loaded (with waveform preview and name), Playing (illuminated, animated waveform), Stopped, Selected.
+        *   **Visuals**: Waveform thumbnail, Loop Name, Play/Stop indicator icon.
+        *   **Interactions**:
+            *   **Click**: Trigger/stop loop playback.
+            *   **Double-click/Long Press**: Open the "Pad Settings" modal/panel.
+            *   **Drag-and-Drop**: Load loops from the Library tab or drag clips to the Song Timeline.
+    *   **Global Pad Controls**:
+        *   **Quantize**: Dropdown to select grid snapping (e.g., 1/4, 1/8, 1/16) for loop triggers.
+        *   **Global Play/Stop**: Controls the overall playback transport, affecting both pads and the timeline.
+        *   **Record Loop**: Activates audio input recording (microphone access required via `navigator.mediaDevices.getUserMedia`) and saving to an empty pad.
+        *   **Clear All Pads**: Resets all pad states to empty.
+        *   **Gemini Generate Button**: Navigates to/focuses the AI Generation tab in the sidebar.
+
+2.  **Song Arrangement Timeline**
+    *   **Timeline Header**: Displays measure numbers horizontally, supports horizontal scrolling.
+    *   **Playhead**: A visual indicator showing the current playback position, draggable for scrubbing through the song.
+    *   **Track Lanes**:
+        *   **Track Header**: Contains Track Name (editable text input), Mute (`M`) button, Solo (`S`) button, Volume Slider, and Pan Knob. These controls map directly to audio processing nodes in the Web Audio API.
+        *   **Clip Area**: A grid where audio clips (loops) are placed.
+            *   **Loop Clips**: Rendered as rectangles containing a waveform representation.
+            *   **Interactions**: Drag to position, resize horizontally (to control loop start/end points or repetitions), copy, delete.
+    *   **Global Song Transport Controls**: Standard Play, Pause, Stop, Rewind, Fast Forward buttons.
+    *   **Loop Region Toggle**: Enables/disables loop playback for a defined section of the timeline.
+    *   **Metronome Toggle**: Toggles an audible click track synchronized with the project BPM.
+    *   **Record Song Button**: Allows recording of performance or external audio directly into track clips.
+
+**C. Left Side Panel (Collapsible/Tabbed)**
+
+1.  **Loop Library Tab**:
+    *   **Search Bar**: For filtering loops by name.
+    *   **Category Filters**: Buttons/dropdowns to filter by genre, instrument type, generated status, etc.
+    *   **Loop List**:
+        *   A scrollable, potentially virtualized list of available audio assets.
+        *   Each item displays Loop Name, Duration, BPM.
+        *   **Interactions**: Preview Play button, Drag Handle, Upload Button (for importing user's own audio files), Delete Icon.
+        *   **"My Generated Loops" Section**: A dedicated area for AI-generated content.
+
+2.  **AI Generation Tab (Powered by Gemini Lyra)**
+    *   **"Generate New Loop" Section**:
+        *   **Text Prompt Input**: Multi-line text area for detailed descriptions.
+        *   **Configuration Parameters**:
+            *   Dropdowns for Genre, Instrument, Mood, Key.
+            *   Inputs for Length, BPM.
+            *   Advanced parameters from Lyra API: `guidance`, `density`, `brightness`, `scale`, `temperature`, `top_k`.
+        *   **Generate Button**: Triggers the Lyra API request.
+        *   **Results Area**: Displays generated loop suggestions (e.g., 3-5 options) with:
+            *   Small preview waveform/name.
+            *   Play button for auditioning.
+            *   "Assign to Pad" dropdown (to select a target pad).
+            *   "Add to Library" button.
+    *   **"Vary Existing Loop" Section**:
+        *   Dropdown to select a loop from loaded pads or library.
+        *   Variation Type controls (e.g., More Complex, Simpler, Different Instrument).
+        *   **Generate Variation Button**: Triggers Lyra API for variations.
+        *   Results Area: Similar to "Generate New Loop".
+
+**D. Pad Settings Panel (Modal/Overlay)**
+
+*   Accessed by double-clicking/long-pressing a pad.
+*   **Pad Name**: Editable text input.
+*   **Volume & Pan Sliders**: For granular control over the pad's output.
+*   **Loop Region Visualizer**: A larger, interactive waveform display with draggable start and end handles to precisely define the loop segment.
+*   **Load Loop**: Button to import an audio file to the selected pad.
+*   **Save Loop**: Button to save the configured loop (including edits) to the user's library.
+*   **Delete Loop**: Button to remove the loop from the pad.
+*   **Send to Gemini for Variation**: Triggers an AI generation process using the current pad's loop as input.
+
+**E. Optional/Future: Right Side Panel (Mixer / Effects)**
+
+*   **Mixer View**: A concise display of track volume and pan faders.
+*   **Effects Rack**: Slots for applying audio effects (Reverb, Delay, EQ, Distortion) to individual tracks or the master output.
+
+### III. Key Frontend Challenges & Considerations
+
+1.  **Real-time Audio Performance**:
+    *   **Buffering**: Implementing meticulous audio buffering for incoming Lyra streams and outgoing playback is paramount to avoid glitches, dropouts, and latency.
+    *   **Web Audio API Management**: Efficiently creating, connecting, and disconnecting audio graph nodes for pads, tracks, effects, transport, and AI output.
+    *   **Optimized Rendering**: Ensure smooth UI updates, potentially leveraging techniques like requestAnimationFrame for animations and canvas for waveform rendering.
+
+2.  **State Synchronization**:
+    *   Maintaining consistency between the visual state of pads, the arrangement in the timeline, playback status, and the Lyra API parameters (BPM, prompts, configuration).
+
+3.  **User Experience (UX) & Interactivity**:
+    *   **Intuitive Controls**: Design must cater to novice and experienced users. Sliders, knobs, and drag-and-drop interactions need to feel responsive and predictable.
+    *   **Visual Feedback**: Clear visual cues for playback, recording, selected elements, and AI processing status are essential.
+    *   **Accessibility**: Adherence to WCAG guidelines for all interactive elements, ensuring keyboard navigability and screen reader compatibility.
+
+4.  **Lyra API Integration Complexity**:
+    *   Handling the streaming nature of Lyra requires careful management of WebSocket connections, message parsing, and audio chunk processing.
+    *   Implementing smooth transitions for prompt and configuration changes, as suggested in the API docs.
+
+5.  **Project Persistence**:
+    *   Designing an efficient and robust serialization format for project states (loops, arrangements, global settings) that can be easily saved and loaded.
+
+This comprehensive conceptualization provides a strong foundation for building Lyra Studio. The focus should be on creating a highly responsive, visually engaging, and functionally powerful interface that empowers artists to explore and create music with Gemini's AI capabilities.```
+Music Generation
+	```import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({
+  apiVersion: 'v1alpha',
+});
+
+// Create session object to control music generation.
+const session: MusicSession = client.live.music.connect({
+  model: 'models/lyria-realtime-exp',
+  callbacks: {
+    onMessage: (message) => {
+      // Application logic: buffer and play using Web Audio API etc.
+    },
+    onError: (error) => {
+      console.error('music session error:', error);
+    },
+    onClose: () => {
+      console.log('Lyria RealTime stream closed.');
+    }
+  }
+}); 
+
+// Send initial prompts and config
+await session.setWeightedPrompts({
+  weightedPrompts: [{ text: 'minimal techno', weight: 1.0 }],
+});
+await session.setMusicGenerationConfig({
+  musicGenerationConfig: { bpm: 90, temperature: 1.0 },
+});
+
+// Start generation
+await session.play();```
+Steer Music Generation
+	```// Steer music generation 
+await session.setMusicGenerationConfig({
+   weightedPrompts: [
+     { text: 'Harmonica', weight: 0.3 },
+     { text: 'Afrobeat', weight: 0.7 }
+   ],
+ });
+
+// Updating in Real Time
+await session.setMusicGenerationConfig({
+    musicGenerationConfig: { bpm: 120, density: 0.75 },
+  });
+  await session.reset_context();
+```
+### Prompt guide for Lyria RealTime
+Here's a non-exhaustive list of prompts you can use to prompt Lyria RealTime:
+- Instruments: 303 Acid Bass, 808 Hip Hop Beat, Accordion, Alto Saxophone, Bagpipes, Balalaika Ensemble, Banjo, Bass Clarinet, Bongos, Boomy Bass, Bouzouki, Buchla Synths, Cello, Charango, Clavichord, Conga Drums, Didgeridoo, Dirty Synths, Djembe, Drumline, Dulcimer, Fiddle, Flamenco Guitar, Funk Drums, Glockenspiel, Guitar, Hang Drum, Harmonica, Harp, Harpsichord, Hurdy-gurdy, Kalimba, Koto, Lyre, Mandolin, Maracas, Marimba, Mbira, Mellotron, Metallic Twang, Moog Oscillations, Ocarina, Persian Tar, Pipa, Precision Bass, Ragtime Piano, Rhodes Piano, Shamisen, Shredding Guitar, Sitar, Slide Guitar, Smooth Pianos, Spacey Synths, Steel Drum, Synth Pads, Tabla, TR-909 Drum Machine, Trumpet, Tuba, Vibraphone, Viola Ensemble, Warm Acoustic Guitar, Woodwinds, ...
+- Music Genre: Acid Jazz, Afrobeat, Alternative Country, Baroque, Bengal Baul, Bhangra, Bluegrass, Blues Rock, Bossa Nova, Breakbeat, Celtic Folk, Chillout, Chiptune, Classic Rock, Contemporary R&B, Cumbia, Deep House, Disco Funk, Drum & Bass, Dubstep, EDM, Electro Swing, Funk Metal, G-funk, Garage Rock, Glitch Hop, Grime, Hyperpop, Indian Classical, Indie Electronic, Indie Folk, Indie Pop, Irish Folk, Jam Band, Jamaican Dub, Jazz Fusion, Latin Jazz, Lo-Fi Hip Hop, Marching Band, Merengue, New Jack Swing, Minimal Techno, Moombahton, Neo-Soul, Orchestral Score, Piano Ballad, Polka, Post-Punk, 60s Psychedelic Rock, Psytrance, R&B, Reggae, Reggaeton, Renaissance Music, Salsa, Shoegaze, Ska, Surf Rock, Synthpop, Techno, Trance, Trap Beat, Trip Hop, Vaporwave, Witch house, ...
+- Mood/Description: Acoustic Instruments, Ambient, Bright Tones, Chill, Crunchy Distortion, Danceable, Dreamy, Echo, Emotional, Ethereal Ambience, Experimental, Fat Beats, Funky, Glitchy Effects, Huge Drop, Live Performance, Lo-fi, Ominous Drone, Psychedelic, Rich Orchestration, Saturated Tones, Subdued Melody, Sustained Chords, Swirling Phasers, Tight Groove, Unsettling, Upbeat, Virtuoso, Weird Noises, ...
+These are just some examples, Lyria RealTime can do much more. Experiment with your own prompts!
+### Best practices
+- Client applications must implement robust audio buffering to ensure smooth playback. This helps account for network jitter and slight variations in generation latency.
+- Effective prompting:
+	- Be descriptive. Use adjectives describing mood, genre, and instrumentation.
+	- Iterate and steer gradually. Rather than completely changing the prompt, try adding or modifying elements to morph the music more smoothly.
+	- Experiment with weight on WeightedPrompt to influence how strongly a new prompt affects the ongoing generation.
+### Technical details
+This section describes the specifics of how to use Lyria RealTime music generation.
+#### Specifications
+- Output format: Raw 16-bit PCM Audio
+- Sample rate: 48kHz
+- Channels: 2 (stereo)
+#### Controls
+Music generation can be influenced in real time by sending messages containing:
+- WeightedPrompt: A text string describing a musical idea, genre, instrument, mood, or characteristic. Multiple prompts can potentially be supplied to blend influences. See above for more details on how to best prompt Lyria RealTime.
+- MusicGenerationConfig: Configuration for the music generation process, influencing the characteristics of the output audio.). Parameters include:
+	- guidance: (float) Range: [0.0, 6.0]. Default: 4.0. Controls how strictly the model follows the prompts. Higher guidance improves adherence to the prompt, but makes transitions more abrupt.
+	- bpm: (int) Range: [60, 200]. Sets the Beats Per Minute you want for the generated music. You need to stop/play or reset the context for the model it take into account the new bpm.
+	- density: (float) Range: [0.0, 1.0]. Controls the density of musical notes/sounds. Lower values produce sparser music; higher values produce "busier" music.
+	- brightness: (float) Range: [0.0, 1.0]. Adjusts the tonal quality. Higher values produce "brighter" sounding audio, generally emphasizing higher frequencies.
+	- scale: (Enum) Sets the musical scale (Key and Mode) for the generation. Use the Scale enum values provided by the SDK. You need to stop/play or reset the context for the model it take into account the new scale.
+	- mute_bass: (bool) Default: False. Controls whether the model reduces the outputs' bass.
+	- mute_drums: (bool) Default: False. Controls whether the model outputs reduces the outputs' drums.
+	- only_bass_and_drums: (bool) Default: False. Steer the model to try to only output bass and drums.
+- PlaybackControl: Commands to control playback aspects, such as play, pause, stop or reset the context.
+For bpm, density, brightness and scale, if no value is provided, the model will decide what's best according to your initial prompts.
+More classical parameters like temperature (0.0 to 3.0, default 1.1), top_k (1 to 1000, default 40), and seed (0 to 2 147 483 647, randomly selected by default) are also customizable in the MusicGenerationConfig.
+#### Scale Enum Values
+Here are all the scale values that the model can accept:
+			Enum Value
+			Scale / Key
+			C_MAJOR_A_MINOR
+			C major / A minor
+			D_FLAT_MAJOR_B_FLAT_MINOR
+			D♭ major / B♭ minor
+			D_MAJOR_B_MINOR
+			D major / B minor
+			E_FLAT_MAJOR_C_MINOR
+			E♭ major / C minor
+			E_MAJOR_D_FLAT_MINOR
+			E major / C♯/D♭ minor
+			F_MAJOR_D_MINOR
+			F major / D minor
+			G_FLAT_MAJOR_E_FLAT_MINOR
+			G♭ major / E♭ minor
+			G_MAJOR_E_MINOR
+			G major / E minor
+			A_FLAT_MAJOR_F_MINOR
+			A♭ major / F minor
+			A_MAJOR_G_FLAT_MINOR
+			A major / F♯/G♭ minor
+			B_FLAT_MAJOR_G_MINOR
+			B♭ major / G minor
+			B_MAJOR_A_FLAT_MINOR
+			B major / G♯/A♭ minor
+			SCALE_UNSPECIFIED
+			Default / The model decides
+The model is capable of guiding the notes that are played, but does not distinguish between relative keys. Thus each enum corresponds both to the relative major and minor. For example, C_MAJOR_A_MINOR would correspond to all the white keys of a piano, and F_MAJOR_D_MINOR would be all the white keys except B flat.
+#### Limitations
+- Instrumental only: The model generates instrumental music only.
+- Safety: Prompts are checked by safety filters. Prompts triggering the filters will be ignored in which case an explanation will be written in the output's filtered_prompt field.
+- Watermarking: Output audio is always watermarked for identification following our Responsible AI principles.
+
